@@ -12,6 +12,7 @@ function App() {
             const tick = setInterval(() => {
                 setTimer((prev) => {
                     if (prev <= 1) {
+                        setIsRunning(false)
                         return 0
                     }
                     return prev - 1;
