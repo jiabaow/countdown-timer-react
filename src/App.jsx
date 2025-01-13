@@ -1,10 +1,37 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [timer, setTimer] = useState(300);
+  const [isRunning, setIsRunning] = useState(false);
+
+    useEffect(() => {
+        if (isRunning) {
+            const tick = setInterval(() => {
+                setTimer((prev) => {
+                    if (prev <= 1) {
+                        return 0
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+            return () => clearInterval(tick);
+        }
+    }, [isRunning]);
+
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    const handleRestart = () => {
+        setTimer(300);
+        setIsRunning(false);
+    }
+
 
   return (
     <>
@@ -18,12 +45,10 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        <h1>{formatTime(timer)}</h1>
+        <button onClick={() => setIsRunning(true)}>Start</button>
+        <button onClick={() => setIsRunning(false)}>Stop</button>
+        <button onClick={() => handleRestart()}>Reset</button>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
